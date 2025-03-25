@@ -1,0 +1,31 @@
+package mk.ukim.finki.emt.lab.Model;
+
+import jakarta.persistence.*;
+import lombok.Data;
+
+@Entity
+@Table(name = "HOSTS")
+@Data
+public class Host {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long ID;
+
+    private String name;
+
+    private String surname;
+
+    @ManyToOne
+    private Country country;
+
+
+    public Host() {
+    }
+
+    public Host(String name, String surname, Country country) {
+        this.name = name;
+        this.surname = surname;
+        this.country = country;
+    }
+}
