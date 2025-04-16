@@ -18,13 +18,13 @@ public class Host {
     @ManyToOne
     private Country country;
 
-
-    public Host() {
-    }
-
     public Host(String name, String surname, Country country) {
         this.name = name;
         this.surname = surname;
         this.country = country;
+    }
+
+    public Host() {
+
     }
 }

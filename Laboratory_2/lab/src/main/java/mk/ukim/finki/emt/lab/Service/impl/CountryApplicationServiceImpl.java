@@ -9,6 +9,7 @@ import mk.ukim.finki.emt.lab.Service.domain.CountryService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,17 +28,18 @@ public class CountryApplicationServiceImpl implements CountryApplicationService 
         return countryService.findAll().stream().map(DisplayCountryDTO::from).collect(Collectors.toList());
     }
     @Override
-    public Country create(CreateCountryDTO createCountryDto) {
+    public DisplayCountryDTO create(CreateCountryDTO createCountryDto) {
         Country country = new Country(
                 createCountryDto.name(),
                 createCountryDto.continent(),
                 createCountryDto.currency()
         );
-        return countryRepository.save(country);
+        Country savedCountry = countryRepository.save(country);
+        return DisplayCountryDTO.from(savedCountry);
     }
 
     @Override
-    public Country update(Long id, CreateCountryDTO updateDto) {
+    public DisplayCountryDTO update(Long id, CreateCountryDTO updateDto) {
         Country country = countryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Country not found"));
 
@@ -45,11 +47,17 @@ public class CountryApplicationServiceImpl implements CountryApplicationService 
         country.setContinent(updateDto.continent());
         country.setCurrency(updateDto.currency());
 
-        return countryRepository.save(country);
+        Country updatedCountry = countryRepository.save(country);
+        return DisplayCountryDTO.from(updatedCountry);
     }
 
     @Override
     public void delete(Long id) {
         countryRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<DisplayCountryDTO> findById(Long id) {
+        return countryService.findById(id).map(DisplayCountryDTO::from);
     }
 }

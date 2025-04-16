@@ -10,6 +10,7 @@ import mk.ukim.finki.emt.lab.Service.HostApplicationService;
 import mk.ukim.finki.emt.lab.Service.domain.HostService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class HostApplicationServiceImpl implements HostApplicationService {
@@ -30,20 +31,19 @@ public class HostApplicationServiceImpl implements HostApplicationService {
     }
 
     @Override
-    public Host create(CreateHostDTO createHostDto) {
-        Country country = countryRepository.findById(createHostDto.countryId())
-                .orElseThrow(() -> new RuntimeException("Country not found"));
-
+    public DisplayHostDTO create(CreateHostDTO createHostDto) {
         Host host = new Host(
                 createHostDto.name(),
                 createHostDto.surname(),
-                country
+                createHostDto.toHost().getCountry()
         );
-        return hostRepository.save(host);
+
+        Host createdHost = hostRepository.save(host);
+        return DisplayHostDTO.from(createdHost);
     }
 
     @Override
-    public Host update(Long id, CreateHostDTO updateDto) {
+    public DisplayHostDTO update(Long id, CreateHostDTO updateDto) {
         Host host = hostRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Host not found"));
 
@@ -54,11 +54,17 @@ public class HostApplicationServiceImpl implements HostApplicationService {
         host.setSurname(updateDto.surname());
         host.setCountry(country);
 
-        return hostRepository.save(host);
+        Host updatedHost = hostRepository.save(host);
+        return DisplayHostDTO.from(updatedHost);
     }
 
     @Override
     public void delete(Long id) {
         hostRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<DisplayHostDTO> findById(Long id) {
+        return hostService.findById(id).map(DisplayHostDTO.to());
     }
 }

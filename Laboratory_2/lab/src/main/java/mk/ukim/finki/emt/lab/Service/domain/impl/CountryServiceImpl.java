@@ -6,6 +6,7 @@ import mk.ukim.finki.emt.lab.Service.domain.CountryService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CountryServiceImpl implements CountryService {
@@ -19,5 +20,10 @@ public class CountryServiceImpl implements CountryService {
     @Override
     public List<Country> findAll() {
         return this.countryRepository.findAll();
+    }
+
+    @Override
+    public Optional<Country> findById(Long id) {
+        return Optional.empty();
     }
 }

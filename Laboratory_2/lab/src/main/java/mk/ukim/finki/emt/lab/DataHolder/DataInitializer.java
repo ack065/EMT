@@ -37,5 +37,6 @@ public class DataInitializer {
         this.hostRepository.save(host1);
         this.hostRepository.save(host2);
         this.hostRepository.save(host3);
+
     }
 }
